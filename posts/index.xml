@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Programming Propositions</title>
-    <link>https://stevesuave.github.io/posts/</link>
+    <link>https://stevesuave.github.io/programming-propositions/posts/</link>
     <description>Programming Propositions (Posts)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 21 Oct 2022 23:30:55 +0300</lastBuildDate>
     
-    <atom:link href="https://stevesuave.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://stevesuave.github.io/programming-propositions/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>The Logical Operators In Lambda Calculus</title>
-      <link>https://stevesuave.github.io/posts/the-logical-operators-in-lambda-calculus/</link>
+      <link>https://stevesuave.github.io/programming-propositions/posts/the-logical-operators-in-lambda-calculus/</link>
       <pubDate>Fri, 21 Oct 2022 23:30:55 +0300</pubDate>
       
-      <guid>https://stevesuave.github.io/posts/the-logical-operators-in-lambda-calculus/</guid>
+      <guid>https://stevesuave.github.io/programming-propositions/posts/the-logical-operators-in-lambda-calculus/</guid>
       <description>&lt;h5 id=&#34;basic-notions&#34; &gt;Basic notions
 &lt;span&gt;
     &lt;a href=&#34;#basic-notions&#34;&gt;

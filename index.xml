@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Programming Propositions</title>
-    <link>https://stevesuave.github.io/</link>
+    <link>https://stevesuave.github.io/programming-propositions/</link>
     <description>Programming Propositions</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 21 Oct 2022 23:30:55 +0300</lastBuildDate>
     
-    <atom:link href="https://stevesuave.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://stevesuave.github.io/programming-propositions/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>The Logical Operators In Lambda Calculus</title>
-      <link>https://stevesuave.github.io/posts/the-logical-operators-in-lambda-calculus/</link>
+      <link>https://stevesuave.github.io/programming-propositions/posts/the-logical-operators-in-lambda-calculus/</link>
       <pubDate>Fri, 21 Oct 2022 23:30:55 +0300</pubDate>
       
-      <guid>https://stevesuave.github.io/posts/the-logical-operators-in-lambda-calculus/</guid>
+      <guid>https://stevesuave.github.io/programming-propositions/posts/the-logical-operators-in-lambda-calculus/</guid>
       <description>&lt;h5 id=&#34;basic-notions&#34; &gt;Basic notions
 &lt;span&gt;
     &lt;a href=&#34;#basic-notions&#34;&gt;
@@ -131,10 +131,10 @@ When an expression can be reduced by applying a function to an argument it is ca
     
     <item>
       <title>About</title>
-      <link>https://stevesuave.github.io/about/</link>
+      <link>https://stevesuave.github.io/programming-propositions/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://stevesuave.github.io/about/</guid>
+      <guid>https://stevesuave.github.io/programming-propositions/about/</guid>
       <description>&lt;p&gt;This website is just another programmer&amp;rsquo;s blog.&lt;/p&gt;
 &lt;p&gt;Its name was inspired from the propositions of Euclid&amp;rsquo;s Elements but, in contrast to Euclid&amp;rsquo;s template of presenting explicitly stated theorems followed by rigorous proofs, the content presented here is planned to be much more informal.&lt;/p&gt;
 &lt;p&gt;My intention for this blog is to be a place where I collect my attempts to understand and explain, to any web visitor or my future self, various topics that interest me but I don&amp;rsquo;t necessarily get to enjoy in my everyday work as a programmer.&lt;/p&gt;
