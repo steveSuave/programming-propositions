@@ -6,10 +6,101 @@
     <description>Programming Propositions</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 21 Oct 2022 23:30:55 +0300</lastBuildDate>
+    <lastBuildDate>Sat, 22 Oct 2022 11:07:37 +0300</lastBuildDate>
     
     <atom:link href="https://stevesuave.github.io/programming-propositions/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Computing The Catalan Numbers In Racket</title>
+      <link>https://stevesuave.github.io/programming-propositions/posts/computing-the-catalan-numbers-in-racket/</link>
+      <pubDate>Sat, 22 Oct 2022 11:07:37 +0300</pubDate>
+      
+      <guid>https://stevesuave.github.io/programming-propositions/posts/computing-the-catalan-numbers-in-racket/</guid>
+      <description>&lt;p&gt;The Catalan numbers is a sequence (named after a Belgian mathematician and not the Romance language) which satisfies the recurrence relation:
+$$C_{0} = 1,\hspace{6mu}C_{n+1} = \sum_{i=0}^{n} C_{i}C_{n - i}\qquad(n\geq 0)$$&lt;/p&gt;
+&lt;p&gt;Among other interesting applications, Cn counts the number of expressions containing n correctly matched pairs of parentheses.&lt;/p&gt;
+&lt;p&gt;This post will show the transformation of the above summation into a dynamic programming algorithm using Racket.&lt;/p&gt;
+&lt;p&gt;First of all we notice that if we translated directly the referenced definition into a recursive program, a call for the nth Catalan number would include $2*(n-1)$ recursive calls (minus one because we don&amp;rsquo;t count the base case), which leads to a prohibitive exponential-time algorithm. So we will have to use some sort of memoization to reduce the time-complexity.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s visualise the summation process for the 8th Catalan number:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;  0  1  2  3   4   5   6    7
+ [1, 1, 2, 5, 14, 42, 132,  X]  C(7):
+
+  a        *           A    +
+     b     *       B        +
+        c  *   C            +
+          d*D               +
+        E  *   e            +
+     F     *       f        +
+  G        *           g
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Knowing the first 7 catalan numbers we see that in order to find the 8th one we have to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Multiply the 6th catalan with the 0th catalan,&lt;/li&gt;
+&lt;li&gt;then multiply the 5th with the 1st,&lt;/li&gt;
+&lt;li&gt;then the 4th with the 2nd,&lt;/li&gt;
+&lt;li&gt;then the 3rd by itself,&lt;/li&gt;
+&lt;li&gt;then the 2nd with the 4th,&lt;/li&gt;
+&lt;li&gt;then the 1st with the 5th,&lt;/li&gt;
+&lt;li&gt;then the 0th with the 6th&lt;/li&gt;
+&lt;li&gt;and then sum up all these products to get the 8th catalan.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The process described above implies that as a first step we need to create a new list with the products. Since we already have a list with the first 7 catalan numbers, this could be achieved by duplicating this list in reversed order and then walking down both lists simultaneously multiplying the two elements.&lt;/p&gt;
+&lt;p&gt;This step can be easily handled by racket&amp;rsquo;s map function which does exactly that for as many lists as we provide it with.
+&lt;code&gt;(map (lambda (x y) (* x y)) ls (reverse ls))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Now that we have a new list with the products we just need to sum them up, a classical use case for the fold function.
+&lt;code&gt;(foldl + 0 the-products)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Since addition is associative and commutative, the foldr function would return the same result. The difference between foldl and foldr is subtle and worth experimenting with. Possibly a subject for another post.&lt;/p&gt;
+&lt;p&gt;Notice that there is a repetition which has not been taken into account in the proposed algorithm. However, even if we took advantage of it, we would just reduce the time-complexity by a constant amount which is asymptotically unimportant.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s see a complete program.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-racket&#34; data-lang=&#34;racket&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define&lt;/span&gt; (catalan n)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;augment&lt;/span&gt; ls)                      &lt;span style=&#34;color:#75715e&#34;&gt;;1+3*len(ls)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (cons                                   &lt;span style=&#34;color:#75715e&#34;&gt;;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     (foldl + &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;                             &lt;span style=&#34;color:#75715e&#34;&gt;;len(ls)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            (map (&lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; (x y) (* x y))     &lt;span style=&#34;color:#75715e&#34;&gt;;len(ls)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                 ls
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                 (reverse ls)))             &lt;span style=&#34;color:#75715e&#34;&gt;;len(ls)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     ls))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define&lt;/span&gt; (loop n ls)                       &lt;span style=&#34;color:#75715e&#34;&gt;;(3n^2 + n)/2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&amp;lt;= n &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        (reverse ls)                        &lt;span style=&#34;color:#75715e&#34;&gt;;n&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        (loop (- n &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) (&lt;span style=&#34;color:#66d9ef&#34;&gt;augment&lt;/span&gt; ls))))       &lt;span style=&#34;color:#75715e&#34;&gt;;(1+3*1) + (1+3*2) + ... + (1+3*n) =&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	                                        &lt;span style=&#34;color:#75715e&#34;&gt;;(3n^2 - n)/2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (loop n &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#39;&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(catalan &lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt;)                                &lt;span style=&#34;color:#75715e&#34;&gt;;n^2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#39;&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;14&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;42&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;132&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;429&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;1430&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;4862&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;16796&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;58786&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;208012&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;742900&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;2674440&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;9694845&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;35357670&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;129644790&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;477638700&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;1767263190&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;6564120420&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;24466267020&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;91482563640&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;343059613650&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;1289904147324&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;4861946401452&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The final algorithm is one of $\mathcal{O}(n^2)$ time-complexity which, with the help of Racket and memoization, was achieved it in a functional and side-effect free way.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>The Logical Operators In Lambda Calculus</title>
@@ -73,7 +164,7 @@ Let&amp;rsquo;s define &lt;em&gt;Not&lt;/em&gt; as $$\lambda x.((x \hspace{6mu} 
 $$(\lambda x.((x \hspace{6mu} False) \hspace{6mu} True) \hspace{6mu} True) \to$$
 $$((True \hspace{6mu} False) \hspace{6mu} True)\to$$
 $$ False $$&lt;/p&gt;
-&lt;p&gt;From here on I will be less explanatory and briefly define the &lt;em&gt;And&lt;/em&gt;, &lt;em&gt;Or&lt;/em&gt;, &lt;em&gt;Implies&lt;/em&gt; and &lt;em&gt;Equivalent&lt;/em&gt; operators in abbreviated boolean lambda terms. I will leave the expansion as a pastime suggestion to the reader. One could also consider defining &lt;em&gt;Xor&lt;/em&gt;, &lt;em&gt;Nand&lt;/em&gt; etc.&lt;/p&gt;
+&lt;p&gt;From here on I will stop being explanatory and I will briefly define the &lt;em&gt;And&lt;/em&gt;, &lt;em&gt;Or&lt;/em&gt;, &lt;em&gt;Implies&lt;/em&gt; and &lt;em&gt;Equivalent&lt;/em&gt; operators in abbreviated boolean lambda terms. I will leave the expansion as a pastime suggestion to the reader. One could also consider defining &lt;em&gt;Xor&lt;/em&gt;, &lt;em&gt;Nand&lt;/em&gt; etc.&lt;/p&gt;
 &lt;p&gt;$$ And = \lambda a. \lambda b.(a \hspace{6mu} b \hspace{6mu} False) $$
 $$ Or = \lambda a. \lambda b.(a \hspace{6mu} True \hspace{6mu} b) $$
 $$ Implies = \lambda a. \lambda b.(a \hspace{6mu} b \hspace{6mu} True) $$

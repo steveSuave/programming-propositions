@@ -73,7 +73,7 @@ Let&amp;rsquo;s define &lt;em&gt;Not&lt;/em&gt; as $$\lambda x.((x \hspace{6mu} 
 $$(\lambda x.((x \hspace{6mu} False) \hspace{6mu} True) \hspace{6mu} True) \to$$
 $$((True \hspace{6mu} False) \hspace{6mu} True)\to$$
 $$ False $$&lt;/p&gt;
-&lt;p&gt;From here on I will be less explanatory and briefly define the &lt;em&gt;And&lt;/em&gt;, &lt;em&gt;Or&lt;/em&gt;, &lt;em&gt;Implies&lt;/em&gt; and &lt;em&gt;Equivalent&lt;/em&gt; operators in abbreviated boolean lambda terms. I will leave the expansion as a pastime suggestion to the reader. One could also consider defining &lt;em&gt;Xor&lt;/em&gt;, &lt;em&gt;Nand&lt;/em&gt; etc.&lt;/p&gt;
+&lt;p&gt;From here on I will stop being explanatory and I will briefly define the &lt;em&gt;And&lt;/em&gt;, &lt;em&gt;Or&lt;/em&gt;, &lt;em&gt;Implies&lt;/em&gt; and &lt;em&gt;Equivalent&lt;/em&gt; operators in abbreviated boolean lambda terms. I will leave the expansion as a pastime suggestion to the reader. One could also consider defining &lt;em&gt;Xor&lt;/em&gt;, &lt;em&gt;Nand&lt;/em&gt; etc.&lt;/p&gt;
 &lt;p&gt;$$ And = \lambda a. \lambda b.(a \hspace{6mu} b \hspace{6mu} False) $$
 $$ Or = \lambda a. \lambda b.(a \hspace{6mu} True \hspace{6mu} b) $$
 $$ Implies = \lambda a. \lambda b.(a \hspace{6mu} b \hspace{6mu} True) $$
